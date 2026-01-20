@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>동네 선택</h2>
+<form method="post">
+  <select name="neighborhood_id" required>
+    <option value="">선택해줘</option>
+    {% for n in neighborhoods %}
+      <option value="{{ n.id }}">{{ n.name }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">설정</button>
+</form>
+{% endblock %}

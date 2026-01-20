@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>Local Split Market</title>
+</head>
+<body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <nav>
+    <a href="/">홈</a>
+    <a href="/posts/">동네 글</a>
+    <a href="/choose-neighborhood">동네 설정</a>
+    <a href="/auth/logout">로그아웃</a>
+  </nav>
+  <hr>
+
+  {% block content %}{% endblock %}
+</body>
+</html>
