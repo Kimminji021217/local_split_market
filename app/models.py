@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from .extensions import db
 
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -17,7 +18,7 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(pw)
 
     def check_password(self, pw: str) -> bool:
-        return check_password_hash(self.password_hash, pw)
+        return check_password_hash(pw)
 
     def primary_neighborhood_id(self):
         rel = next((x for x in self.neighborhoods if x.is_primary), None)
@@ -38,7 +39,6 @@ class UserNeighborhood(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     neighborhood_id = db.Column(db.Integer, db.ForeignKey("neighborhoods.id"), primary_key=True)
 
-    # 확장 대비: 나중에 GPS 인증 붙이면 VERIFIED로 바꿔주기만 하면 됨
     verify_status = db.Column(db.String(20), default="SELF_DECLARED", nullable=False)  # SELF_DECLARED/PENDING/VERIFIED
     is_primary = db.Column(db.Boolean, default=True, nullable=False)
     verified_at = db.Column(db.DateTime, nullable=True)
@@ -56,11 +56,29 @@ class Post(db.Model):
     title = db.Column(db.String(200), nullable=False)
     item_name = db.Column(db.String(100), nullable=False)
 
-    total_qty = db.Column(db.Float, nullable=False)   # 예: 10 (kg)
-    unit_qty = db.Column(db.Float, nullable=False)    # 예: 2 (kg) -> 1몫
+    total_qty = db.Column(db.Float, nullable=False)   # 총량(kg 등)
+    unit_qty = db.Column(db.Float, nullable=False)    # 1몫 단위(kg 등)
     deadline = db.Column(db.DateTime, nullable=True)
 
     pickup_place = db.Column(db.String(200), nullable=True)
     status = db.Column(db.String(20), default="OPEN", nullable=False)  # OPEN/CLOSED
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class JoinRequest(db.Model):
+    __tablename__ = "join_requests"
+    id = db.Column(db.Integer, primary_key=True)
+
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    # DB에는 '실제 수량'만 저장 (몫 * unit_qty 로 계산한 값)
+    qty = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(20), default="ACTIVE", nullable=False)  # ACTIVE/CANCELED
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        db.UniqueConstraint("post_id", "user_id", name="uq_join_post_user"),
+    )

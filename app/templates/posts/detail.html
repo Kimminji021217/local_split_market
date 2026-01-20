@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ post.title }}</h2>
+
+<p><b>품목:</b> {{ post.item_name }}</p>
+<p><b>상태:</b> {{ post.status }}</p>
+<p><b>총량:</b> {{ post.total_qty }}</p>
+<p><b>1몫:</b> {{ post.unit_qty }}</p>
+
+{% if post.deadline %}
+  <p><b>마감:</b> {{ post.deadline }}</p>
+{% endif %}
+
+{% if post.pickup_place %}
+  <p><b>픽업:</b> {{ post.pickup_place }}</p>
+{% endif %}
+
+<hr>
+
+<h3>참여 현황</h3>
+<p><b>현재 참여량:</b> {{ "%.2f"|format(joined_qty) }} / {{ "%.2f"|format(post.total_qty) }}</p>
+<p><b>남은 수량:</b> {{ "%.2f"|format(remaining_qty) }}</p>
+<p><b>남은 몫:</b> {{ remaining_shares }}</p>
+
+{% if joins|length == 0 %}
+  <p>아직 참여자가 없어.</p>
+{% else %}
+  <ul>
+    {% for j in joins %}
+      <li>user#{{ j.user_id }} : {{ "%.2f"|format(j.qty) }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% if post.status == "OPEN" %}
+  <h3>참여하기 (몫 단위)</h3>
+
+  {% if my_join and my_join.status == "ACTIVE" %}
+    <p><b>내 참여:</b> {{ "%.2f"|format(my_join.qty) }} (수량)</p>
+  {% endif %}
+
+  <form method="post" action="/posts/{{ post.id }}/join">
+    <div>
+      참여 몫(개):
+      <input name="shares" type="number" step="1" min="1"
+             value="{% if my_join and my_join.status == 'ACTIVE' %}{{ (my_join.qty / post.unit_qty) | round(0, 'floor') }}{% endif %}">
+      <button type="submit">{% if my_join and my_join.status == "ACTIVE" %}수정{% else %}참여{% endif %}</button>
+    </div>
+  </form>
+
+  {% if my_join and my_join.status == "ACTIVE" %}
+    <form method="post" action="/posts/{{ post.id }}/cancel" style="margin-top:10px;">
+      <button type="submit">참여 취소</button>
+    </form>
+  {% endif %}
+{% else %}
+  <p><i>모집이 마감되어 참여할 수 없어.</i></p>
+{% endif %}
+
+<hr>
+
+{% if is_author and post.status == "OPEN" %}
+  <form method="post" action="/posts/{{ post.id }}/close">
+    <button type="submit">모집 마감</button>
+  </form>
+{% endif %}
+
+<p><a href="/posts/">목록으로</a></p>
+{% endblock %}

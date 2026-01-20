@@ -4,9 +4,11 @@ from . import bp
 from ..extensions import db
 from ..models import Neighborhood, UserNeighborhood
 
+
 @bp.route("/")
 def index():
     return redirect(url_for("posts.list_posts"))
+
 
 @bp.route("/choose-neighborhood", methods=["GET", "POST"])
 @login_required
@@ -26,7 +28,12 @@ def choose_neighborhood():
         # 관계 있으면 primary로, 없으면 생성
         rel = UserNeighborhood.query.filter_by(user_id=current_user.id, neighborhood_id=int(nid)).first()
         if not rel:
-            rel = UserNeighborhood(user_id=current_user.id, neighborhood_id=int(nid), verify_status="SELF_DECLARED", is_primary=True)
+            rel = UserNeighborhood(
+                user_id=current_user.id,
+                neighborhood_id=int(nid),
+                verify_status="SELF_DECLARED",
+                is_primary=True,
+            )
             db.session.add(rel)
         else:
             rel.is_primary = True
