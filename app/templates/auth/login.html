@@ -1,10 +1,101 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>로그인</h2>
 <form method="post">
-  <div>Email: <input name="email"></div>
-  <div>Password: <input name="password" type="password"></div>
-  <button type="submit">로그인</button>
+  <!--흰 배경-->
+  <div style="width: 1440px; height: 1024px; position: relative; background: white; overflow: hidden">
+
+  <!-- 연두 배경-->
+  <div style="width: 840px; height: 1212px; left: 0px; top: -102px; position: absolute; background: rgba(139, 174, 102, 0.40)"></div>
+
+  <!--Local Split Market-->
+  <div style="left: 918px; top: 160px; position: absolute; color: #8BAE66; font-size: 48px; font-family: Fredoka; font-weight: 400; word-wrap: break-word">Local Split Market</div>
+
+  <!--캐치 프라이즈-->
+  <div style="left: 961px; top: 229px; position: absolute; color: #929292; font-size: 20px; font-family: Fredoka; font-weight: 400; word-wrap: break-word">담장 너머 따뜻한 거래, 우리 동네 나눔 생활</div>
+
+  <!--Email-->
+  <div style="left: 891px; top: 361px; position: absolute; color: #628141; font-size: 24px; font-family: Fredoka; font-weight: 400; word-wrap: break-word">Email</div>
+
+  <!--Password-->
+  <div style="left: 891px; top: 514px; position: absolute; color: #628141; font-size: 24px; font-family: Fredoka; font-weight: 400; word-wrap: break-word">Password</div>
+
+  <!--Email, Password 선-->
+  <div style="width: 510px; height: 61px; left: 889px; top: 436px; position: absolute; outline: 3px #B9B9B9 solid; outline-offset: -1.50px; border-radius: 8px; background: white"></div>
+  <div style="width: 510px; height: 61px; left: 889px; top: 589px; position: absolute; outline: 3px #B9B9B9 solid; outline-offset: -1.50px; border-radius: 8px; background: white"></div>
+
+  <!--실제 input-->
+  <input
+    name="email"
+    type="email"
+    autocomplete="email"
+    placeholder="you@example.com"
+    style="width: 486px; height: 57px; left: 901px; top: 438px; position: absolute; border: none; outline: none; font-size: 18px; padding: 0 14px; background: transparent;"
+    required
+    />
+    <input
+    name="password"
+    type="password"
+    autocomplete="current-password"
+    placeholder="••••••••"
+    style="width: 486px; height: 57px; left: 901px; top: 591px; position: absolute; border: none; outline: none; font-size: 18px; padding: 0 14px; background: transparent;"
+    required
+    />
+
+    <!--버튼 배경-->
+    <div style="width: 61px; height: 61px; left: 890px; top: 692px; position: absolute; background: #8BAE66; border-radius: 9999px"></div>
+    <div style="width: 61px; height: 61px; left: 1339px; top: 692px; position: absolute; background: #8BAE66; border-radius: 9999px"></div>
+    <div style="width: 450px; height: 61px; left: 920px; top: 692px; position: absolute; background: #8BAE66"></div>
+
+    <div style="width: 61px; height: 61px; left: 889px; top: 779px; position: absolute; background: #628141; border-radius: 9999px"></div>
+    <div style="width: 61px; height: 61px; left: 1338px; top: 779px; position: absolute; background: #628141; border-radius: 9999px"></div>
+    <div style="width: 450px; height: 61px; left: 919px; top: 779px; position: absolute; background: #628141"></div>
+
+    <!--기능 연결: Log In = submit 버튼 / Sign Up = 링크-->
+    <button 
+      type="submit"
+      style="left: 890px; top: 692px; position: absolute; width: 510px; height: 61px; background: transparent; border: none; cursor: pointer;"
+      aria-label="Log In">
+    </button>
+    <a
+      href="/auth/register"
+      style="left: 889px; top: 779px; position: absolute; width: 510px; height: 61px; display: block; text-decoration: none;"
+      aria-label="Sign Up">
+    </a>
+
+    <!--버튼 텍스트-->
+    <div style="left: 1111px; top: 709px; position: absolute; color: white; font-size: 24px; font-family: ABeeZee; font-weight: 400; word-wrap: break-word; pointer-events: none">Log In</div>
+    <div style="left: 1101px; top: 796px; position: absolute; color: white; font-size: 24px; font-family: ABeeZee; font-weight: 400; word-wrap: break-word; pointer-events: none">Sign Up</div>
+
+    <!-- 꽃-->
+    <div style="width: 44.06px; height: 44.06px; left: 189.97px; top: 300.46px; position: absolute; background: #FFE52A; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 222.72px; top: 293.31px; position: absolute; transform: rotate(180deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 207.44px; top: 291.66px; position: absolute; transform: rotate(150deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 193.38px; top: 297.87px; position: absolute; transform: rotate(120deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 19.54px; height: 64.31px; left: 184.31px; top: 310.28px; position: absolute; transform: rotate(90deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 182.66px; top: 325.56px; position: absolute; transform: rotate(60deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 188.87px; top: 339.62px; position: absolute; transform: rotate(30deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 201.28px; top: 348.69px; position: absolute; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 216.56px; top: 350.34px; position: absolute; transform: rotate(-30deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 230.62px; top: 344.13px; position: absolute; transform: rotate(-60deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 239.69px; top: 331.72px; position: absolute; transform: rotate(-90deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 241.34px; top: 316.44px; position: absolute; transform: rotate(-120deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 235.13px; top: 302.38px; position: absolute; transform: rotate(-150deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+
+    <div style="width: 44.06px; height: 44.06px; left: 563.97px; top: 596.46px; position: absolute; background: #FFE52A; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 596.72px; top: 589.31px; position: absolute; transform: rotate(180deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 581.44px; top: 587.66px; position: absolute; transform: rotate(150deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 567.38px; top: 593.87px; position: absolute; transform: rotate(120deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 19.54px; height: 64.31px; left: 558.31px; top: 606.28px; position: absolute; transform: rotate(90deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 556.66px; top: 621.56px; position: absolute; transform: rotate(60deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 562.87px; top: 635.62px; position: absolute; transform: rotate(30deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 575.28px; top: 644.69px; position: absolute; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 590.56px; top: 646.34px; position: absolute; transform: rotate(-30deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 604.62px; top: 640.13px; position: absolute; transform: rotate(-60deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 613.69px; top: 627.72px; position: absolute; transform: rotate(-90deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 615.34px; top: 612.44px; position: absolute; transform: rotate(-120deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+    <div style="width: 22.03px; height: 64.31px; left: 609.13px; top: 598.38px; position: absolute; transform: rotate(-150deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+
+  </div>
 </form>
-<a href="/auth/register">회원가입</a>
+
 {% endblock %}
