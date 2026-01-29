@@ -4,11 +4,14 @@ from flask_login import login_required, current_user
 from . import bp
 from ..extensions import db
 from ..models import Post, JoinRequest
+from ..utils import auto_close_posts
 
 
 @bp.route("/")
 @login_required
 def list_posts():
+    auto_close_posts()
+
     nid = current_user.primary_neighborhood_id()
     if not nid:
         return redirect(url_for("main.choose_neighborhood"))
@@ -75,6 +78,8 @@ def create_post():
 @bp.route("/<int:post_id>")
 @login_required
 def detail_post(post_id: int):
+    auto_close_posts()
+
     nid = current_user.primary_neighborhood_id()
     if not nid:
         return redirect(url_for("main.choose_neighborhood"))
