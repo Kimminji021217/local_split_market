@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>내가 참여한 모집</h2>
+
+{% if joins|length == 0 %}
+  <p>아직 참여한 글이 없어.</p>
+{% else %}
+  <ul>
+    {% for j in joins %}
+      {% set p = posts_by_id.get(j.post_id) %}
+      <li>
+        {% if p %}
+          <a href="/posts/{{ p.id }}">{{ p.title }}</a>
+          - 참여 수량: {{ "%.2f"|format(j.qty) }}
+          (1몫 {{ p.unit_qty }})
+        {% else %}
+          <a href="/posts/{{ j.post_id }}">글 #{{ j.post_id }}</a>
+          - 참여 수량: {{ "%.2f"|format(j.qty) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% endblock %}
