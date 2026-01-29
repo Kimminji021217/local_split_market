@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>내가 쓴 모집글</h2>
+
+{% if posts|length == 0 %}
+  <p>아직 작성한 글이 없어.</p>
+{% else %}
+  <ul>
+    {% for p in posts %}
+      <li>
+        <a href="/posts/{{ p.id }}">[{{ p.status }}] {{ p.title }}</a>
+        - {{ p.item_name }} (총 {{ p.total_qty }}, 1몫 {{ p.unit_qty }})
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% endblock %}

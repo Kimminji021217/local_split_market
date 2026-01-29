@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(pw)
 
     def check_password(self, pw: str) -> bool:
-        return check_password_hash(pw)
+        return check_password_hash(self.password_hash, pw)
 
     def primary_neighborhood_id(self):
         rel = next((x for x in self.neighborhoods if x.is_primary), None)
