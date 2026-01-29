@@ -2,13 +2,65 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from . import bp
 from ..extensions import db
-from ..models import Neighborhood, UserNeighborhood, Post, JoinRequest
+from ..models import Neighborhood, User, UserNeighborhood, Post, JoinRequest
 
 
 @bp.route("/")
 def index():
     return redirect(url_for("posts.list_posts"))
 
+@bp.route("/me")
+@login_required
+def profile():
+    nid = current_user.primary_neighborhood_id()
+    neighborhoods = Neighborhood.query.order_by(Neighborhood.name.asc()).all()
+    
+    rel = None
+    if nid:
+        rel = UserNeighborhood.query.filter_by(
+            user_id=current_user.id,
+            neighborhood_id=nid,
+            is_primary=True
+        ).first()
+
+    return render_template(
+        "main/profile.html",
+        user=current_user,
+        neighborhoods=neighborhoods,
+        nid=nid,
+        neighborhood_rel=rel
+    )
+
+@bp.route("/me/username", methods=["POST"])
+@login_required
+def update_username():
+    username = request.form.get("username", "").strip()
+
+    if not username:
+        flash("닉네임은 비워둘 수 없어.")
+        return redirect(url_for("main.profile"))
+    
+    if len(username) < 2 or len(username) > 20:
+        flash("닉네임은 2~20자여야 해.")
+        return redirect(url_for("main.profile"))
+    
+    if username == current_user.username:
+        flash("변경된 내용이 없어.")
+        return redirect(url_for("main.profile"))
+    
+    exists = User.query.filter(
+        User.username == username,
+        User.id != current_user.id
+    ).first()
+
+    if exists:
+        flash("이미 사용 중인 닉네임이야.")
+        return redirect(url_for("main.profile"))
+
+    current_user.username = username
+    db.session.commit()
+    flash("닉네임이 변경됐어.")
+    return redirect(url_for("main.profile"))
 
 @bp.route("/choose-neighborhood", methods=["GET", "POST"])
 @login_required
@@ -39,6 +91,11 @@ def choose_neighborhood():
             rel.is_primary = True
 
         db.session.commit()
+
+        next_url = request.args.get("next")
+        if next_url and next_url.startswith("/"):
+            return redirect(next_url)
+        
         return redirect(url_for("posts.list_posts"))
 
     return render_template("main/choose_neighborhood.html", neighborhoods=neighborhoods)

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>내 프로필</h2>
+<hr>
+
+<h3>🙋 내 정보</h3>
+
+<form method="post" action="/me/username" style="margin-bottom:10px;">
+  <label>
+    닉네임
+    <input type="text" name="username" value="{{ user.username }}" required>
+  </label>
+  <button type="submit">저장</button>
+</form>
+
+<p>이메일: <b>{{ user.email }}</b></p>
+
+<hr>
+
+<h3>📍 내 동네</h3>
+
+{% if nid %}
+  <p>
+    현재 동네:
+    <b>
+      {{ (neighborhoods | selectattr("id", "equalto", nid) | list | first).name }}
+    </b>
+  </p>
+
+  {% if neighborhood_rel %}
+    <p>
+      인증 상태:
+      <b>{{ neighborhood_rel.verify_status }}</b>
+    </p>
+  {% endif %}
+
+  <button type="button" onclick="openModal()">동네 변경</button>
+{% else %}
+  <p>아직 동네가 설정되지 않았어.</p>
+  <button type="button" onclick="openModal()">동네 설정</button>
+{% endif %}
+
+<!-- 모달 -->
+<div id="neighModal" class="modal-backdrop" style="display:none;">
+  <div class="modal">
+    <h3>동네 선택</h3>
+
+    <form method="post" action="/choose-neighborhood?next=/me">
+      <div style="margin: 10px 0;">
+        <select name="neighborhood_id" required style="width: 100%; padding: 6px;">
+          <option value="" disabled {% if not nid %}selected{% endif %}>동네를 선택해줘</option>
+          {% for n in neighborhoods %}
+            <option value="{{ n.id }}" {% if nid == n.id %}selected{% endif %}>{{ n.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" onclick="closeModal()">취소</button>
+        <button type="submit">저장</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<hr>
+
+<h3>📝 내 활동</h3>
+<ul>
+  <li><a href="/me/posts">내가 쓴 모집글</a></li>
+  <li><a href="/me/joins">내가 참여한 모집글</a></li>
+</ul>
+
+<hr>
+
+<h3>⚡ 빠른 액션</h3>
+<p><a href="/posts/new">+ 모집글 작성</a></p>
+
+<style>
+  .modal-backdrop{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.35);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal{
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 10px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  }
+</style>
+
+<script>
+  function openModal(){
+    document.getElementById("neighModal").style.display = "flex";
+  }
+  function closeModal(){
+    document.getElementById("neighModal").style.display = "none";
+  }
+  // 바깥 클릭하면 닫기
+  document.getElementById("neighModal").addEventListener("click", function(e){
+    if(e.target === this) closeModal();
+  });
+</script>
+
+{% endblock %}

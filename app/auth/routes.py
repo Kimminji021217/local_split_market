@@ -8,10 +8,10 @@ from ..models import User
 def register():
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
-        nickname = request.form.get("nickname", "").strip()
+        username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
 
-        if not email or not nickname or not password:
+        if not email or not username or not password:
             flash("모든 항목을 입력해줘.")
             return redirect(url_for("auth.register"))
 
@@ -19,10 +19,19 @@ def register():
             flash("이미 가입된 이메일이야.")
             return redirect(url_for("auth.register"))
 
-        user = User(email=email, nickname=nickname)
+        user = User(email=email, username=username)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
+
+        if not username or len(username) < 2 or len(username) > 20:
+            flash("닉네임은 2~20자여야 해.")
+            return redirect(url_for("auth.register"))
+
+        exists = User.query.filter_by(username=username).first()
+        if exists:
+            flash("이미 사용 중인 닉네임이야.")
+            return redirect(url_for("auth.register"))
 
         login_user(user)
         return redirect(url_for("main.choose_neighborhood"))
