@@ -1,11 +1,66 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>회원가입</h2>
-<form method="post">
-  <div>Email: <input name="email"></div>
-  <div>Username: <input type="text" name="username" placeholder="닉네임" required>
-  <div>Password: <input name="password" type="password"></div>
-  <button type="submit">가입</button>
-</form>
-<a href="/auth/login">로그인</a>
+
+<div style="width: 1440px; height: 1024px; position: relative; background: white; overflow: hidden">
+  <div style="width: 1440px; height: 1024px; left: 0px; top: 0px; position: absolute; background: rgba(139, 174, 102, 0.40)"></div>
+
+  <!--꽃-->
+  <div style="width: 44.06px; height: 44.06px; left: 142.97px; top: 304.46px; position: absolute; background: #FFE52A; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 175.72px; top: 297.31px; position: absolute; transform: rotate(180deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 160.44px; top: 295.66px; position: absolute; transform: rotate(150deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 146.38px; top: 301.87px; position: absolute; transform: rotate(120deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 19.54px; height: 64.31px; left: 137.31px; top: 314.28px; position: absolute; transform: rotate(90deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 135.66px; top: 329.56px; position: absolute; transform: rotate(60deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 141.87px; top: 343.62px; position: absolute; transform: rotate(30deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 154.28px; top: 352.69px; position: absolute; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 169.56px; top: 354.34px; position: absolute; transform: rotate(-30deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 183.62px; top: 348.13px; position: absolute; transform: rotate(-60deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 192.69px; top: 335.72px; position: absolute; transform: rotate(-90deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 194.34px; top: 320.44px; position: absolute; transform: rotate(-120deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+  <div style="width: 22.03px; height: 64.31px; left: 188.13px; top: 306.38px; position: absolute; transform: rotate(-150deg); transform-origin: top left; background: white; border-radius: 9999px"></div>
+
+  <!--회원가입-->
+  <div style="left: 602px; top: 111px; position: absolute; color: #628141; font-size: 64px; font-family: Noto Sans KR; font-weight: 700;">회원가입</div>
+  <form method="post">
+
+  <!-- Email -->
+  <div style="left: 467px; top: 304px; position: absolute; color: #3D5028; font-size: 24px; font-family: Borel;">
+    Email
+  </div>
+  <input name="email" style="position:absolute; left: 600px; top: 300px; width: 350px; height: 40px; border: none; background: transparent; border-bottom: 3px solid white; font-size:18px;">
+
+  <!--Password-->
+  <div style="left: 467px; top: 457px; position: absolute; color: #3D5028; font-size: 24px; font-family: Borel;">
+    Password
+  </div>
+  <input name="password" type="password" style="position:absolute; left: 600px; top: 453px; width: 350px; height: 40px; border: none; background: transparent; border-bottom: 3px solid white; font-size:18px;">
+
+  <!--ID-->
+  <div style="left: 467px; top: 591px; position: absolute; color: #3D5028; font-size: 24px; font-family: Borel;">
+    ID
+  </div>
+  <input name="username" type="text" placeholder="닉네임" required
+           style="position:absolute; left: 600px; top: 588px; width: 350px; height: 40px; border: none; background: transparent; border-bottom: 3px solid white; font-size:18px;">
+
+  <!-- 회원가입 버튼 -->
+  <button type="submit" style="position:absolute; left: 495px; top: 744px;
+    width: 511px; height: 61px; background:#628141; color:white;
+    border:none; font-size:24px; font-family:ABeeZee; cursor:pointer;">
+      Sign Up
+  </button>
+
+  </form>
+
+  <!-- 로그인 이동 버튼 -->
+  <a href="/auth/login">
+    <div style="position:absolute; left: 496px; top: 839px;
+    width: 511px; height: 61px; background:#8BAE66; color:white;
+    text-align:center; line-height:61px; font-size:24px; font-family:ABeeZee;">
+      Log In
+    </div>
+  </a>
+
+</div>
+
 {% endblock %}
+
