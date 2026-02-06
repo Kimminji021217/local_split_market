@@ -1,6 +1,7 @@
 from flask import Flask
 from .extensions import db, login_manager
 from .models import User, Neighborhood
+from .utils import deadline_badge
 
 def create_app():
     app = Flask(__name__)
@@ -18,6 +19,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(posts_bp)
+    app.jinja_env.globals["deadline_badge"] = deadline_badge
 
     # DB 생성 + 동네 더미 seed
     with app.app_context():

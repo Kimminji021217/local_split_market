@@ -59,6 +59,11 @@
 
 <hr>
 
+{% set badge = deadline_badge(post.deadline) %}
+{% if badge %}
+  <p><b>마감:</b> {{ badge }}</p>
+{% endif %}
+
 {% if is_author and post.status == "OPEN" %}
   <form method="post" action="/posts/{{ post.id }}/close">
     <button type="submit">모집 마감</button>

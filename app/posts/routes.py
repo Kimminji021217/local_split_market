@@ -4,16 +4,17 @@ from flask_login import login_required, current_user
 from . import bp
 from ..extensions import db
 from ..models import Post, JoinRequest
-
+from ..utils import auto_close_posts
 
 @bp.route("/")
 @login_required
 def list_posts():
     nid = current_user.primary_neighborhood_id()
     if not nid:
-        return redirect(url_for("main.choose_neighborhood"))
+        return redirect(url_for("main.profile"))
 
-    posts = Post.query.filter_by(neighborhood_id=nid).order_by(Post.created_at.desc()).all()
+    posts = Post.query.filter_by(neighborhood_id=nid) \
+                      .order_by(Post.created_at.desc()).all()
     return render_template("posts/list.html", posts=posts)
 
 
@@ -75,9 +76,11 @@ def create_post():
 @bp.route("/<int:post_id>")
 @login_required
 def detail_post(post_id: int):
+    auto_close_posts()
+
     nid = current_user.primary_neighborhood_id()
     if not nid:
-        return redirect(url_for("main.choose_neighborhood"))
+        return redirect(url_for("main.profile"))
 
     post = Post.query.get_or_404(post_id)
     if post.neighborhood_id != nid:

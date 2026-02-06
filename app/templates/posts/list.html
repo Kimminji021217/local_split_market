@@ -12,6 +12,11 @@
       <li>
         <a href="/posts/{{ p.id }}">[{{ p.status }}] {{ p.title }}</a>
         - {{ p.item_name }} (총 {{ p.total_qty }}, 1몫 {{ p.unit_qty }})
+
+        {% set badge = deadline_badge(p.deadline) %}
+        {% if badge %}
+          <span class="badge">{{ badge }}</span>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
