@@ -13,10 +13,14 @@ def list_posts():
     if not nid:
         return redirect(url_for("main.profile"))
 
-    posts = Post.query.filter_by(neighborhood_id=nid) \
-                      .order_by(Post.created_at.desc()).all()
-    return render_template("posts/list.html", posts=posts)
+    category = request.args.get("category", "").strip()  # "", "MART", "DELIVERY", "ETC"
 
+    q = Post.query.filter_by(neighborhood_id=nid)
+    if category in ("MART", "DELIVERY", "ETC"):
+        q = q.filter_by(category=category)
+
+    posts = q.order_by(Post.created_at.desc()).all()
+    return render_template("posts/list.html", posts=posts, category=category)
 
 @bp.route("/new", methods=["GET", "POST"])
 @login_required
@@ -24,6 +28,10 @@ def create_post():
     nid = current_user.primary_neighborhood_id()
     if not nid:
         return redirect(url_for("main.choose_neighborhood"))
+    
+    category = request.form.get("category", "MART").strip()
+    if category not in ("MART", "DELIVERY", "ETC"):
+        category = "ETC"
 
     if request.method == "POST":
         title = request.form.get("title", "").strip()
@@ -59,6 +67,7 @@ def create_post():
             neighborhood_id=nid,
             title=title,
             item_name=item_name,
+            category=category,
             total_qty=total_qty_f,
             unit_qty=unit_qty_f,
             deadline=deadline,

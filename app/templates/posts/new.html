@@ -13,6 +13,13 @@
     <input name="item_name" required style="width: 320px;">
   </div><br>
 
+  <label>분류</label>
+  <select name="category" required>
+    <option value="MART">마트 소분</option>
+    <option value="DELIVERY">배달 소분</option>
+    <option value="ETC">기타</option>
+  </select>
+
   <div>
     총량* (예: 10)<br>
     <input name="total_qty" required type="number" step="0.01" min="0.01">

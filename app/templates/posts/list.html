@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+
+<form method="get" action="/posts/">
+  <select name="category">
+    <option value="" {% if not category %}selected{% endif %}>전체</option>
+    <option value="MART" {% if category=="MART" %}selected{% endif %}>마트 소분</option>
+    <option value="DELIVERY" {% if category=="DELIVERY" %}selected{% endif %}>배달 소분</option>
+    <option value="ETC" {% if category=="ETC" %}selected{% endif %}>기타</option>
+  </select>
+  <button type="submit">필터</button>
+</form>
+
 <h2>우리 동네 모집글</h2>
 
 <p><a href="/posts/new">+ 모집글 작성</a></p>
@@ -12,6 +23,9 @@
       <li>
         <a href="/posts/{{ p.id }}">[{{ p.status }}] {{ p.title }}</a>
         - {{ p.item_name }} (총 {{ p.total_qty }}, 1몫 {{ p.unit_qty }})
+        
+        <a href="/posts/{{ p.id }}">[{{ p.status }}] {{ p.title }}</a>
+        <span>({{ p.category }})</span>
 
         {% set badge = deadline_badge(p.deadline) %}
         {% if badge %}

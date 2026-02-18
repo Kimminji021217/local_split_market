@@ -52,6 +52,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     neighborhood_id = db.Column(db.Integer, db.ForeignKey("neighborhoods.id"), nullable=False)
+    category = db.Column(db.String(30), nullable=False, default="MART")
 
     title = db.Column(db.String(200), nullable=False)
     item_name = db.Column(db.String(100), nullable=False)
