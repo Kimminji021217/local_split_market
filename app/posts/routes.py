@@ -1,4 +1,5 @@
 from datetime import datetime
+from collections import defaultdict
 from flask import render_template, redirect, url_for, request, flash, abort
 from flask_login import login_required, current_user
 from . import bp
@@ -13,22 +14,36 @@ def list_posts():
     if not nid:
         return redirect(url_for("main.profile"))
 
-    category = request.args.get("category", "").strip()  # "", "MART", "DELIVERY", "ETC"
+    posts = (
+        Post.query.filter_by(neighborhood_id=nid)
+        .order_by(Post.created_at.desc())
+        .all()
+    )
 
-    q = Post.query.filter_by(neighborhood_id=nid)
-    if category in ("MART", "DELIVERY", "ETC"):
-        q = q.filter_by(category=category)
+    # grouped[category][subcategory] = [posts...]
+    grouped = defaultdict(lambda: defaultdict(list))
+    for p in posts:
+        cat = p.category or "ETC"
+        sub = (p.subcategory or "기타").strip() if p.subcategory else "기타"
+        grouped[cat][sub].append(p)
 
-    posts = q.order_by(Post.created_at.desc()).all()
-    return render_template("posts/list.html", posts=posts, category=category)
+    # 고정 카테고리 순서
+    category_order = ["MART", "DELIVERY", "ETC"]
+
+    return render_template(
+        "posts/list.html",
+        grouped=grouped,
+        category_order=category_order,
+    )
 
 @bp.route("/new", methods=["GET", "POST"])
 @login_required
 def create_post():
     nid = current_user.primary_neighborhood_id()
     if not nid:
-        return redirect(url_for("main.choose_neighborhood"))
-    
+        return redirect(url_for("main.profile"))
+
+    preset_category = request.args.get("category", "MART")
     category = request.form.get("category", "MART").strip()
     if category not in ("MART", "DELIVERY", "ETC"):
         category = "ETC"
@@ -40,6 +55,8 @@ def create_post():
         unit_qty = request.form.get("unit_qty", "").strip()
         deadline_str = request.form.get("deadline", "").strip()  # "YYYY-MM-DDTHH:MM"
         pickup_place = request.form.get("pickup_place", "").strip()
+        category = request.form.get("category", "MART").strip()
+        subcategory = request.form.get("subcategory", "").strip()
 
         if not title or not item_name or not total_qty or not unit_qty:
             flash("제목/품목/총량/1몫은 필수야.")
@@ -61,6 +78,9 @@ def create_post():
             except ValueError:
                 flash("마감시간 형식이 올바르지 않아.")
                 return redirect(url_for("posts.create_post"))
+            
+        if category not in Post.CATEGORY_CHOICES:
+            category = "ETC"
 
         post = Post(
             author_id=current_user.id,
@@ -68,6 +88,7 @@ def create_post():
             title=title,
             item_name=item_name,
             category=category,
+            subcategory=subcategory or None,
             total_qty=total_qty_f,
             unit_qty=unit_qty_f,
             deadline=deadline,
@@ -79,7 +100,7 @@ def create_post():
 
         return redirect(url_for("posts.detail_post", post_id=post.id))
 
-    return render_template("posts/new.html")
+    return render_template("posts/new.html", preset_category=preset_category)
 
 
 @bp.route("/<int:post_id>")

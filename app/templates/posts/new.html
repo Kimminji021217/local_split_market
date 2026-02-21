@@ -15,10 +15,20 @@
 
   <label>분류</label>
   <select name="category" required>
-    <option value="MART">마트 소분</option>
-    <option value="DELIVERY">배달 소분</option>
-    <option value="ETC">기타</option>
+    <option value="MART" {% if preset_category=="MART" %}selected{% endif %}>마트 소분</option>
+    <option value="DELIVERY" {% if preset_category=="DELIVERY" %}selected{% endif %}>배달 소분</option>
+    <option value="ETC" {% if preset_category=="ETC" %}selected{% endif %}>기타</option>
   </select>
+
+  <div>
+    세부 분류<br>
+    <select name="subcategory" id="subcategory"></select>
+    
+    <div style="margin-top:6px;">
+      직접 입력(선택) <input type="text" id="custom_subcategory" placeholder="예: 생필품, 회, 햄버거">
+      <button type="button" id="apply_custom">적용</button>
+    </div>
+  </div><br>
 
   <div>
     총량* (예: 10)<br>
@@ -44,4 +54,61 @@
 </form>
 
 <p><a href="/posts/">목록으로</a></p>
+
+<script>
+  const SUBCATEGORIES = {
+    MART: ["육류", "채소", "과일", "유제품", "냉동/간편식", "생활용품", "기타"],
+    DELIVERY: ["치킨", "피자", "중식", "한식", "분식", "햄버거", "디저트", "기타"],
+    ETC: ["공구/생활", "육아", "스터디", "기타"]
+  };
+
+  function fillSubcategoryOptions(category, selectedValue = "") {
+    const subSelect = document.getElementById("subcategory");
+    subSelect.innerHTML = "";
+
+    const list = SUBCATEGORIES[category] || ["기타"];
+    for (const name of list) {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      if (selectedValue && selectedValue === name) opt.selected = true;
+      subSelect.appendChild(opt);
+    }
+
+    // selectedValue가 목록에 없으면 "기타" 선택
+    if (selectedValue && !list.includes(selectedValue)) {
+      subSelect.value = "기타";
+    }
+  }
+
+  // 초기화: 현재 카테고리 값 기준으로 서브 옵션 채우기
+  const categorySelect = document.querySelector('select[name="category"]');
+  const presetCategory = categorySelect ? categorySelect.value : "MART";
+
+  // 서버에서 기존 값을 넘겨줄 수도 있으니(나중에 수정 페이지 대비) 기본은 빈값
+  fillSubcategoryOptions(presetCategory, "");
+
+  // 카테고리 바뀌면 서브카테고리 자동 변경
+  categorySelect.addEventListener("change", (e) => {
+    fillSubcategoryOptions(e.target.value, "");
+  });
+
+  // 직접 입력을 select에 반영
+  document.getElementById("apply_custom").addEventListener("click", () => {
+    const v = document.getElementById("custom_subcategory").value.trim();
+    if (!v) return;
+
+    const subSelect = document.getElementById("subcategory");
+    // 없으면 새 옵션 추가 후 선택
+    const exists = Array.from(subSelect.options).some(o => o.value === v);
+    if (!exists) {
+      const opt = document.createElement("option");
+      opt.value = v;
+      opt.textContent = v;
+      subSelect.appendChild(opt);
+    }
+    subSelect.value = v;
+  });
+</script>
+
 {% endblock %}

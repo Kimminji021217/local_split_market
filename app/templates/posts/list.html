@@ -1,38 +1,108 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form method="get" action="/posts/">
-  <select name="category">
-    <option value="" {% if not category %}selected{% endif %}>전체</option>
-    <option value="MART" {% if category=="MART" %}selected{% endif %}>마트 소분</option>
-    <option value="DELIVERY" {% if category=="DELIVERY" %}selected{% endif %}>배달 소분</option>
-    <option value="ETC" {% if category=="ETC" %}selected{% endif %}>기타</option>
-  </select>
-  <button type="submit">필터</button>
-</form>
-
 <h2>우리 동네 모집글</h2>
-
 <p><a href="/posts/new">+ 모집글 작성</a></p>
 
-{% if posts|length == 0 %}
-  <p>아직 글이 없어.</p>
-{% else %}
-  <ul>
-    {% for p in posts %}
-      <li>
-        <a href="/posts/{{ p.id }}">[{{ p.status }}] {{ p.title }}</a>
-        - {{ p.item_name }} (총 {{ p.total_qty }}, 1몫 {{ p.unit_qty }})
-        
-        <a href="/posts/{{ p.id }}">[{{ p.status }}] {{ p.title }}</a>
-        <span>({{ p.category }})</span>
+<style>
+  .node { margin: 10px 0; }
+  .toggle {
+    cursor: pointer;
+    border: none;
+    background: #f2f2f2;
+    padding: 8px 10px;
+    border-radius: 8px;
+    width: 100%;
+    text-align: left;
+    font-weight: 600;
+  }
+  .children { margin-left: 14px; margin-top: 6px; display: none; }
+  .subtoggle {
+    cursor: pointer;
+    border: none;
+    background: #fafafa;
+    padding: 6px 10px;
+    border-radius: 8px;
+    width: 100%;
+    text-align: left;
+  }
+  .posts { margin-left: 14px; margin-top: 6px; display: none; }
+  .badge {
+    background:#eee; padding:2px 6px; border-radius:4px;
+    margin-left:6px; font-size: 12px;
+  }
+</style>
 
-        {% set badge = deadline_badge(p.deadline) %}
-        {% if badge %}
-          <span class="badge">{{ badge }}</span>
-        {% endif %}
-      </li>
+{% for cat in category_order %}
+  {% set submap = grouped.get(cat) %}
+  {% set cat_count = 0 %}
+  {% if submap %}
+    {% for sub, arr in submap.items() %}
+      {% set cat_count = cat_count + (arr|length) %}
     {% endfor %}
-  </ul>
-{% endif %}
+  {% endif %}
+
+  <div class="node">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <button class="toggle" type="button" data-target="cat-{{ cat }}">
+        {% if cat == "MART" %}📦 마트 소분
+        {% elif cat == "DELIVERY" %}🍔 배달 소분
+        {% else %}📌 기타
+        {% endif %}
+        <span class="badge">{{ cat_count }}</span>
+      </button>
+
+      <a href="/posts/new?category={{ cat }}"
+        style="background:#8e8e8e; color:white; padding:6px 10px;
+                border-radius:8px; text-decoration:none; font-size:14px;
+                white-space:nowrap; display:inline-block;">
+        + 글 작성
+      </a>
+    </div>
+
+    <div class="children" id="cat-{{ cat }}">
+      {% if not submap or (submap|length == 0) %}
+        <p style="color:gray; margin:8px 0;">글이 없어.</p>
+      {% else %}
+
+        {% for sub, arr in submap.items() %}
+          <div class="node">
+            <button class="subtoggle" type="button" data-target="sub-{{ cat }}-{{ loop.index }}">
+              ▸ {{ sub }} <span class="badge">{{ arr|length }}</span>
+            </button>
+
+            <div class="posts" id="sub-{{ cat }}-{{ loop.index }}">
+              <ul>
+                {% for p in arr %}
+                  <li>
+                    <a href="/posts/{{ p.id }}">[{{ p.status }}] {{ p.title }}</a>
+                    - {{ p.item_name }} (총 {{ p.total_qty }}, 1몫 {{ p.unit_qty }})
+                    {% set badge = deadline_badge(p.deadline) %}
+                    {% if badge %}
+                      <span class="badge">{{ badge }}</span>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+
+<script>
+  function toggleById(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
+  }
+
+  document.querySelectorAll("[data-target]").forEach(btn => {
+    btn.addEventListener("click", () => toggleById(btn.dataset.target));
+  });
+</script>
+
 {% endblock %}

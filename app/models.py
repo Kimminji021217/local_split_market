@@ -52,19 +52,18 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     neighborhood_id = db.Column(db.Integer, db.ForeignKey("neighborhoods.id"), nullable=False)
-    category = db.Column(db.String(30), nullable=False, default="MART")
+    CATEGORY_CHOICES = ("MART", "DELIVERY", "ETC")
 
     title = db.Column(db.String(200), nullable=False)
     item_name = db.Column(db.String(100), nullable=False)
-
     total_qty = db.Column(db.Float, nullable=False)   # 총량(kg 등)
     unit_qty = db.Column(db.Float, nullable=False)    # 1몫 단위(kg 등)
     deadline = db.Column(db.DateTime, nullable=True)
-
     pickup_place = db.Column(db.String(200), nullable=True)
     status = db.Column(db.String(20), default="OPEN", nullable=False)  # OPEN/CLOSED
-
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    category = db.Column(db.String(30), nullable=False)
+    subcategory = db.Column(db.String(50), nullable=True)
 
 
 class JoinRequest(db.Model):
